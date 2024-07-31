@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+      integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+
+    <title>Business Chat App</title>
+  </head>
+  <body>
+    <div class="chat-container">
+      <header class="chat-header">
+        <h1><i class="fas fa-smile"></i> Business Chat App</h1>
+        <a href="logout" class="btn">Log Out</a>
+        <!-- <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" value="logout">Log Out</button>
+        </form> -->
+      </header>
+      <main class="chat-main">
+        <div class="chat-sidebar">
+          <h3><i class="fas fa-comments"></i> Room Name:</h3>
+          <h2 id="room-name">{{ room }}</h2>
+          <h3><i class="fas fa-user"></i> User</h3>
+          <ul id="users">
+            {{username}}
+            <!-- {% for user in users %}
+            <li>{{user.username}}</li>
+            {% empty %}
+            <li>No users in this room.</li>
+            {% endfor %} -->
+          </ul>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="message">
+            <div class="message">
+              <p class="meta"><b></b> <span></span></p>
+              <p class="text"></p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <script>
+        $(document).ready(function () {
+          setInterval(function () {
+            $.ajax({
+              type: "GET",
+              url: "/getMessages/{{room}}/",
+              success: function (response) {
+                // console.log(response);
+                $("#chat-messages").empty();
+                for (var key in response.messages) {
+                  var temp =
+                    "<div class='message'><b>" +
+                    response.messages[key].user +
+                    "</b><p>" +
+                    response.messages[key].value +
+                    "</p><span> " +
+                    response.messages[key].date +
+                    "</span></div>";
+                  $("#chat-messages").append(temp);
+                }
+              },
+              error: function (response) {
+                alert("An error occured");
+              },
+            });
+          }, 1000);
+        });
+      </script>
+
+      <div class="chat-form-container">
+        <form id="post-form">
+          {% csrf_token %}
+          <input
+            type="hidden"
+            name="username"
+            id="username"
+            value="{{username}}"
+          />
+          <input
+            type="hidden"
+            name="room_id"
+            id="room_id"
+            value="{{room_details.id}}"
+          />
+          <input type="text" name="message" id="message" width="100px" />
+          <input class="btn" type="submit" value="Send" />
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script src="../static/js/script.js"></script>
+  </body>
+
+  <script type="text/javascript">
+    $(document).on("submit", "#post-form", function (event) {
+      event.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/send",
+        data: {
+          username: $("#username").val(),
+          room_id: $("#room_id").val(),
+          message: $("#message").val(),
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        },
+        success: function (data) {
+          //alert(data);
+        },
+      });
+      document.getElementById("message").value = "";
+    });
+  </script>
+</html>

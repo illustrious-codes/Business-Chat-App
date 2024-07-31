@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+      integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Business Chat App</title>
+  </head>
+  <body>
+    <div class="join-container">
+      <header class="join-header">
+        <h1><i class="fas fa-smile"></i> Business Chat App</h1>
+      </header>
+      <main class="join-main">
+        <form id="post_form" method="post" action="checkview">
+          {% csrf_token %} {% for message in messages %}
+          <h3 style="color: red" class="alert {{ message.tags }}">
+            {{ message }}
+          </h3>
+          {% endfor %}
+          <div class="form-control">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Enter username..."
+              required
+            />
+            <label for="username">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter Password..."
+              required
+            />
+          </div>
+          <div class="form-control">
+            <label for="room">Business</label>
+            <input type="text" name="room_name" id="room_name" />
+          </div>
+          <input type="submit" value="Join Business Chat" class="btn" />
+        </form>
+      </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script src="../static/js/script.js"></script>
+  </body>
+</html>
