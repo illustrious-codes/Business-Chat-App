@@ -12,6 +12,5 @@ urlpatterns = [
     path('home/checkview', views.checkview, name='checkview'),
     path('send', views.send, name='send'),
     path('getMessages/<str:room>/', views.getMessages, name='getMessages'),
-    path('logout/', views.logout, name='logout'),
+    path('logout', views.logout, name='logout'),
 ]
-

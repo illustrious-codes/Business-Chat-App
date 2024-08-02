@@ -1,8 +1,8 @@
-from ast import List
+
 from email import message
 from os import name
 from django.shortcuts import render, redirect, get_object_or_404
-from chat.models import Room, Message
+from chat.models import Room, Message, UserStatus
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_GET
 from django.contrib.auth.models import User, auth
@@ -22,15 +22,6 @@ def room(request, room):
     return render(request, 'room.html', {'username':username, 'room':room, 'room_details':room_details})
 
 def checkview(request):
-    # room = request.POST['room_name']
-    # username = request.POST['username']
-
-    # if Room.objects.filter(name=room).exists():
-    #     return redirect(f'/{room}/?username={username}')
-    # else:
-    #     new_room = Room.objects.create(name=room)
-    #     new_room.save()
-    #     return redirect(f'/{room}/?username={username}')
     if request.method == 'POST':
         room = request.POST.get('room_name')
         username = request.POST.get('username')
@@ -101,6 +92,16 @@ def create(request):
         return render(request, 'create.html')
     
 def logout(request):
-    if request.method == 'POST':
-        logouts(request)
-        return redirect('')
+    logouts(request)
+    return redirect('/')
+
+
+def chat_room(request, room_name):
+    room = get_object_or_404(Room, name=room_name)
+    UserStatus.objects.update_or_create(
+        user=request.user,
+        room=room,
+        defaults={'is_online': True}
+    )
+    users = UserStatus.objects.filter(room=room, is_online=True)
+    return render(request, 'room.html', {'room': room, 'users': users})

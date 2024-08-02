@@ -17,18 +17,17 @@
       integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
       crossorigin="anonymous"
     ></script>
-
     <title>Business Chat App</title>
   </head>
   <body>
     <div class="chat-container">
       <header class="chat-header">
         <h1><i class="fas fa-smile"></i> Business Chat App</h1>
-        <a href="logout" class="btn">Log Out</a>
-        <!-- <form method="post" action="{% url 'logout' %}">
+        <!-- <a href="/logout" class="btn">Log Out</a> -->
+        <form action="{% url 'logout' %}" method="post">
           {% csrf_token %}
-          <button type="submit" value="logout">Log Out</button>
-        </form> -->
+          <button class="btn" type="submit">Logout</button>
+        </form>
       </header>
       <main class="chat-main">
         <div class="chat-sidebar">
@@ -36,12 +35,11 @@
           <h2 id="room-name">{{ room }}</h2>
           <h3><i class="fas fa-user"></i> User</h3>
           <ul id="users">
-            {{username}}
-            <!-- {% for user in users %}
-            <li>{{user.username}}</li>
+            {{username}} {% for user in users %}
+            <li>{{ user.user.username }}</li>
             {% empty %}
-            <li>No users in this room.</li>
-            {% endfor %} -->
+            <li>No users online</li>
+            {% endfor %}
           </ul>
         </div>
         <div class="chat-messages" id="chat-messages">
