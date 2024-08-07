@@ -105,4 +105,3 @@ def chat_room(request, room_name):
     )
     users = UserStatus.objects.filter(room=room, is_online=True)
     return render(request, 'room.html', {'room': room, 'users': users})
-    mmmmmm
